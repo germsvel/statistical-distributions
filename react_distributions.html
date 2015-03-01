@@ -1,0 +1,146 @@
+<!<!-- index.html -->
+<html>
+  <head>
+    <title>Distributions</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+    <script src="http://fb.me/react-0.12.2.js"></script>
+    <script src="http://fb.me/JSXTransformer-0.12.2.js"></script>
+    <script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+    <script src="http://cdn.jsdelivr.net/jstat/1.1.3/jstat.min.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div id="content"></div>
+    <script>
+    </script>
+    <script type="text/jsx">
+      var App = React.createClass({
+        getInitialState: function() {
+          return {k: 0, n: 0, p: 0.5};
+        },
+        handleSubmit: function(e) {
+          e.preventDefault();
+          var k = this.refs.k.getDOMNode().value.trim();
+          var n = this.refs.n.getDOMNode().value.trim();
+          var p = this.refs.p.getDOMNode().value.trim();
+          var variables = {k: k, n: n, p: p};
+          this.setState(variables);
+        },
+        render: function() {
+          return (
+            <div className="container">
+              <div className="row">
+                <div className="col-md-3">
+                  <h3>Binomial Distribution</h3>
+                  <form onSubmit={this.handleSubmit} >
+                    <div className="form-group">
+                      <label for="k-input">Number of Successes</label>
+                      <input className="form-control" id="k-input" type="text" placeholder="k" ref="k" />
+                    </div>
+                    <div className="form-group">
+                      <label>Number of Iterations</label>
+                      <input className="form-control" type="text" placeholder="n" ref="n" />
+                    </div>
+                    <div className="form-group">
+                      <label>Probablity of event</label>
+                      <input className="form-control" type="text" placeholder="p" ref="p" />
+                    </div>
+                    <button className="btn btn-default" type="submit" value="Calculate">Calculate</button>
+                  </form>
+                </div>
+                <div className="col-md-9">
+                  <Binomial k={this.state.k} n={this.state.n} p={this.state.p} />
+                </div>
+              </div>
+            </div>
+          );
+        }
+      });
+
+      var Binomial = React.createClass({
+        render: function() {
+          var k = parseFloat(this.props.k)
+          var n = parseFloat(this.props.n)
+          var p = parseFloat(this.props.p)
+
+          var x = [];
+          var y = [];
+          var z = [];
+
+          for (var i = k; i <= n; i++) {
+            x.push(i);
+            var pdf = jStat.binomial.pdf(k, i, p);
+            y.push(pdf);
+            var cdf = jStat.binomial.cdf(i, n, p);
+            z.push(cdf)
+          }
+          return(
+            <div className="row">
+              <div className="col-md-6">
+                <LineChart title="PDF" xData={x} yData={y} />
+              </div>
+              <div className="col-md-6">
+                <LineChart title="CDF" xData={x} yData={z} />
+              </div>
+            </div>
+          );
+        }
+      });
+
+      var LineChart = React.createClass({
+        renderChart: function() {
+          var title = this.props.title;
+          var xAxisData = this.props.xData;
+          var yAxisData = [{data: this.props.yData}];
+          var node = this.refs.chartNode.getDOMNode();
+          $(function () {
+            $(node).highcharts({
+                chart: {
+                    type: 'line'
+                },
+                title: {
+                    text: title
+                },
+                xAxis: {
+                    categories: xAxisData
+                },
+                yAxis: {
+                    title: {
+                        text: "f(x)"
+                    }
+                },
+                series: yAxisData
+            });
+          });
+        },
+        componentDidMount: function() {
+          this.renderChart();
+        },
+        componentDidUpdate: function() {
+          this.renderChart();
+        },
+        render: function() {
+          var divStyle = {
+            width: '100%',
+            height: '400px'
+          };
+          return(
+            <div ref="chartNode" style={divStyle}>
+            </div>
+          );
+        }
+      });
+
+      React.render(
+        <App />,
+        document.getElementById('content')
+      );
+    </script>
+  </body>
+</html>
+
