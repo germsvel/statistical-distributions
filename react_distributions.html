@@ -70,9 +70,9 @@
           var y = [];
           var z = [];
 
-          for (var i = k; i <= n; i++) {
+          for (var i = 0; i <= n; i++) {
             x.push(i);
-            var pdf = jStat.binomial.pdf(k, i, p);
+            var pdf = jStat.binomial.pdf(i, n, p);
             y.push(pdf);
             var cdf = jStat.binomial.cdf(i, n, p);
             z.push(cdf)
