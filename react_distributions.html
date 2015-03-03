@@ -24,6 +24,64 @@
               <Binomial />
               <Poisson />
               <Normal />
+              <Exponential />
+            </div>
+          );
+        }
+      });
+
+      var Exponential = React.createClass({
+        getInitialState: function() {
+          return {n: 10, rate: .5};
+        },
+        handleSubmit: function(e) {
+          e.preventDefault();
+          var n = this.refs.n.getDOMNode().value.trim();
+          var rate = this.refs.rate.getDOMNode().value.trim();
+          var variables = {n: n, rate: rate};
+          this.setState(variables);
+        },
+        render: function() {
+          var n = parseFloat(this.state.n)
+          var rate = parseFloat(this.state.rate)
+
+          var x = [];
+          var y = [];
+          var z = [];
+
+          for (var i = 0; i <= n; i++) {
+            x.push(i);
+            var pdf = jStat.exponential.pdf(i, rate);
+            y.push(pdf);
+            var cdf = jStat.exponential.cdf(i, rate);
+            z.push(cdf)
+          }
+          return(
+            <div className="row">
+              <div className="col-md-3">
+                <h3>Exponential Distribution</h3>
+                <form onSubmit={this.handleSubmit} >
+                  <div className="form-group">
+                    <label>Number of Trials</label>
+                    <input className="form-control" type="text" placeholder="n" ref="n" />
+                  </div>
+                  <div className="form-group">
+                    <label>Rate</label>
+                    <input className="form-control" type="text" placeholder="rate" ref="rate" />
+                  </div>
+                  <button className="btn btn-default" type="submit" value="Calculate">Calculate</button>
+                </form>
+              </div>
+              <div className="col-md-9">
+                <div className="row">
+                  <div className="col-md-6">
+                    <LineChart title="PDF" xData={x} yData={y} />
+                  </div>
+                  <div className="col-md-6">
+                    <LineChart title="CDF" xData={x} yData={z} />
+                  </div>
+                </div>
+              </div>
             </div>
           );
         }
@@ -128,7 +186,7 @@
                     <input className="form-control" type="text" placeholder="n" ref="n" />
                   </div>
                   <div className="form-group">
-                    <label>Lambda Parameter</label>
+                    <label>Lambda</label>
                     <input className="form-control" type="text" placeholder="lambda" ref="lambda" />
                   </div>
                   <button className="btn btn-default" type="submit" value="Calculate">Calculate</button>
