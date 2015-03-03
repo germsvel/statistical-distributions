@@ -18,6 +18,74 @@
     <div id="content"></div>
     <script type="text/jsx">
       var App = React.createClass({
+        render: function() {
+          return (
+            <div className="container">
+              <Binomial />
+              <Poisson />
+            </div>
+          );
+        }
+      });
+
+      var Poisson = React.createClass({
+        getInitialState: function() {
+          return {n: 20, lambda: 10};
+        },
+        handleSubmit: function(e) {
+          e.preventDefault();
+          var n = this.refs.n.getDOMNode().value.trim();
+          var lambda = this.refs.lambda.getDOMNode().value.trim();
+          var variables = {n: n, lambda: lambda};
+          this.setState(variables);
+        },
+        render: function() {
+          var n = parseFloat(this.state.n)
+          var lambda = parseFloat(this.state.lambda)
+
+          var x = [];
+          var y = [];
+          var z = [];
+
+          for (var i = 0; i <= n; i++) {
+            x.push(i);
+            var pdf = jStat.poisson.pdf(i, lambda);
+            y.push(pdf);
+            var cdf = jStat.poisson.cdf(i, lambda);
+            z.push(cdf)
+          }
+          return(
+            <div className="row">
+              <div className="col-md-3">
+                <h3>Poisson Distribution</h3>
+                <form onSubmit={this.handleSubmit} >
+                  <div className="form-group">
+                    <label>Number of Trials</label>
+                    <input className="form-control" type="text" placeholder="n" ref="n" />
+                  </div>
+                  <div className="form-group">
+                    <label>Lambda Parameter</label>
+                    <input className="form-control" type="text" placeholder="lambda" ref="lambda" />
+                  </div>
+                  <button className="btn btn-default" type="submit" value="Calculate">Calculate</button>
+                </form>
+              </div>
+              <div className="col-md-9">
+                <div className="row">
+                  <div className="col-md-6">
+                    <LineChart title="PDF" xData={x} yData={y} />
+                  </div>
+                  <div className="col-md-6">
+                    <LineChart title="CDF" xData={x} yData={z} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        }
+      });
+
+      var Binomial = React.createClass({
         getInitialState: function() {
           return {n: 10, p: 0.5};
         },
@@ -29,36 +97,8 @@
           this.setState(variables);
         },
         render: function() {
-          return (
-            <div className="container">
-              <div className="row">
-                <div className="col-md-3">
-                  <h3>Binomial Distribution</h3>
-                  <form onSubmit={this.handleSubmit} >
-                    <div className="form-group">
-                      <label>Number of Trials</label>
-                      <input className="form-control" type="text" placeholder="n" ref="n" />
-                    </div>
-                    <div className="form-group">
-                      <label>Probablity of event</label>
-                      <input className="form-control" type="text" placeholder="p" ref="p" />
-                    </div>
-                    <button className="btn btn-default" type="submit" value="Calculate">Calculate</button>
-                  </form>
-                </div>
-                <div className="col-md-9">
-                  <Binomial n={this.state.n} p={this.state.p} />
-                </div>
-              </div>
-            </div>
-          );
-        }
-      });
-
-      var Binomial = React.createClass({
-        render: function() {
-          var n = parseFloat(this.props.n)
-          var p = parseFloat(this.props.p)
+          var n = parseFloat(this.state.n)
+          var p = parseFloat(this.state.p)
 
           var x = [];
           var y = [];
@@ -73,11 +113,29 @@
           }
           return(
             <div className="row">
-              <div className="col-md-6">
-                <LineChart title="PDF" xData={x} yData={y} />
+              <div className="col-md-3">
+                <h3>Binomial Distribution</h3>
+                <form onSubmit={this.handleSubmit} >
+                  <div className="form-group">
+                    <label>Number of Trials</label>
+                    <input className="form-control" type="text" placeholder="n" ref="n" />
+                  </div>
+                  <div className="form-group">
+                    <label>Probablity of event</label>
+                    <input className="form-control" type="text" placeholder="p" ref="p" />
+                  </div>
+                  <button className="btn btn-default" type="submit" value="Calculate">Calculate</button>
+                </form>
               </div>
-              <div className="col-md-6">
-                <LineChart title="CDF" xData={x} yData={z} />
+              <div className="col-md-9">
+                <div className="row">
+                  <div className="col-md-6">
+                    <LineChart title="PDF" xData={x} yData={y} />
+                  </div>
+                  <div className="col-md-6">
+                    <LineChart title="CDF" xData={x} yData={z} />
+                  </div>
+                </div>
               </div>
             </div>
           );
