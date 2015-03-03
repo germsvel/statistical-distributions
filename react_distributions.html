@@ -25,6 +25,70 @@
               <Poisson />
               <Normal />
               <Exponential />
+              <Uniform />
+            </div>
+          );
+        }
+      });
+
+      var Uniform = React.createClass({
+        getInitialState: function() {
+          return {n: 20, a: 1, b: 24};
+        },
+        handleSubmit: function(e) {
+          e.preventDefault();
+          var n = this.refs.n.getDOMNode().value.trim();
+          var a = this.refs.a.getDOMNode().value.trim();
+          var b = this.refs.b.getDOMNode().value.trim();
+          var variables = {n: n, a: a, b: b};
+          this.setState(variables);
+        },
+        render: function() {
+          var n = parseFloat(this.state.n)
+          var a = parseFloat(this.state.a)
+          var b = parseFloat(this.state.b)
+
+          var x = [];
+          var y = [];
+          var z = [];
+
+          for (var i = 0; i <= n; i++) {
+            x.push(i);
+            var pdf = jStat.uniform.pdf(i, a, b);
+            y.push(pdf);
+            var cdf = jStat.uniform.cdf(i, a, b);
+            z.push(cdf)
+          }
+          return(
+            <div className="row">
+              <div className="col-md-3">
+                <h3>Uniform Distribution</h3>
+                <form onSubmit={this.handleSubmit} >
+                  <div className="form-group">
+                    <label>Number of Trials</label>
+                    <input className="form-control" type="text" placeholder="n" ref="n" />
+                  </div>
+                  <div className="form-group">
+                    <label>From: a</label>
+                    <input className="form-control" type="text" placeholder="a" ref="a" />
+                  </div>
+                  <div className="form-group">
+                    <label>To: b</label>
+                    <input className="form-control" type="text" placeholder="b" ref="b" />
+                  </div>
+                  <button className="btn btn-default" type="submit" value="Calculate">Calculate</button>
+                </form>
+              </div>
+              <div className="col-md-9">
+                <div className="row">
+                  <div className="col-md-6">
+                    <LineChart title="PDF" xData={x} yData={y} />
+                  </div>
+                  <div className="col-md-6">
+                    <LineChart title="CDF" xData={x} yData={z} />
+                  </div>
+                </div>
+              </div>
             </div>
           );
         }
