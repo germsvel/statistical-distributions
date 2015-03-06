@@ -100,34 +100,38 @@
         },
         handleSubmit: function(e) {
           e.preventDefault();
-          var n = this.refs.n.getDOMNode().value.trim();
-          var rate = this.refs.rate.getDOMNode().value.trim();
+          var n = parseFloat(this.refs.n.getDOMNode().value.trim());
+          var rate = parseFloat(this.refs.rate.getDOMNode().value.trim());
           var variables = {n: n, rate: rate};
           this.setState(variables);
         },
         render: function() {
-          var n = parseFloat(this.state.n)
-          var rate = parseFloat(this.state.rate)
+          var n = this.state.n;
+          var rate = this.state.rate;
 
           var x = [];
           var y = [];
           var z = [];
+          var i = 0;
 
-          for (var i = 0; i <= n; i++) {
-            x.push(i);
+          while (i <= n) {
+            nice_i = Math.round(i*100)/100;
+            x.push(nice_i);
             var pdf = jStat.exponential.pdf(i, rate);
             y.push(pdf);
             var cdf = jStat.exponential.cdf(i, rate);
             z.push(cdf)
+            i = i + 0.01
           }
+
           return(
             <div className="row">
               <div className="col-md-3">
                 <h3>Exponential Distribution</h3>
                 <form onSubmit={this.handleSubmit} >
                   <div className="form-group">
-                    <label>Number of Trials</label>
-                    <input className="form-control" type="text" placeholder="n" ref="n" />
+                    <label>End of Interval</label>
+                    <input className="form-control" type="text" placeholder="Interval End" ref="n" />
                   </div>
                   <div className="form-group">
                     <label>Rate</label>
@@ -332,7 +336,7 @@
         renderChart: function() {
           var title = this.props.title;
           var xAxisData = this.props.xData;
-          var yAxisData = [{data: this.props.yData}];
+          var yAxisData = this.props.yData;
           var yAxisTitle = this.props.yTitle;
           var node = this.refs.chartNode.getDOMNode();
           $(function () {
@@ -351,7 +355,9 @@
                         text: yAxisTitle
                     }
                 },
-                series: yAxisData
+                series: [
+                  {data: yAxisData}
+                ]
             });
           });
         },
