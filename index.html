@@ -1,0 +1,413 @@
+<!<!-- index.html -->
+<html>
+  <head>
+    <title>Distributions</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+    <script src="http://fb.me/react-0.12.2.js"></script>
+    <script src="http://fb.me/JSXTransformer-0.12.2.js"></script>
+    <script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+    <script src="http://cdn.jsdelivr.net/jstat/1.1.3/jstat.min.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div id="content"></div>
+    <script type="text/jsx">
+      var App = React.createClass({
+        render: function() {
+          return (
+            <div className="container">
+              <h2 className='text-center'>Distributions</h2>
+              <ul className="nav nav-tabs">
+                <li role="presentation" className="active"><a href="#binomial" data-toggle="tab">Binomial</a></li>
+                <li role="presentation"><a href="#poisson" data-toggle="tab">Poisson</a></li>
+                <li role="presentation"><a href="#uniform" data-toggle="tab">Uniform</a></li>
+                <li role="presentation"><a href="#normal" data-toggle="tab">Normal</a></li>
+                <li role="presentation"><a href="#exponential" data-toggle="tab">Exponential</a></li>
+              </ul>
+
+              <div className="tab-content">
+                <Binomial />
+                <Poisson />
+                <Uniform />
+                <Normal />
+                <Exponential />
+              </div>
+            </div>
+          );
+        }
+      });
+
+      var Uniform = React.createClass({
+        getInitialState: function() {
+          return {n: 20, a: 1, b: 24};
+        },
+        handleSubmit: function(e) {
+          e.preventDefault();
+          var n = this.refs.n.getDOMNode().value.trim();
+          var a = this.refs.a.getDOMNode().value.trim();
+          var b = this.refs.b.getDOMNode().value.trim();
+          var variables = {n: n, a: a, b: b};
+          this.setState(variables);
+        },
+        render: function() {
+          var n = parseFloat(this.state.n)
+          var a = parseFloat(this.state.a)
+          var b = parseFloat(this.state.b)
+
+          var x = [];
+          var y = [];
+          var z = [];
+
+          for (var i = 0; i <= n; i++) {
+            x.push(i);
+            var pdf = jStat.uniform.pdf(i, a, b);
+            y.push(pdf);
+            var cdf = jStat.uniform.cdf(i, a, b);
+            z.push(cdf)
+          }
+          return(
+            <div className="tab-pane" id="uniform">
+              <div className="row">
+                <div className="col-md-3">
+                  <h3>Uniform Distribution</h3>
+                  <form onSubmit={this.handleSubmit} >
+                    <div className="form-group">
+                      <label>Number of Trials</label>
+                      <input className="form-control" type="text" placeholder="n" ref="n" />
+                    </div>
+                    <div className="form-group">
+                      <label>From: a</label>
+                      <input className="form-control" type="text" placeholder="a" ref="a" />
+                    </div>
+                    <div className="form-group">
+                      <label>To: b</label>
+                      <input className="form-control" type="text" placeholder="b" ref="b" />
+                    </div>
+                    <button className="btn btn-default" type="submit" value="Calculate">Calculate</button>
+                  </form>
+                </div>
+                <div className="col-md-9">
+                  <div className="row">
+                    <div className="col-md-6">
+                      <LineChart title="PDF" yTitle="f(x)" xData={x} yData={y} />
+                    </div>
+                    <div className="col-md-6">
+                      <LineChart title="CDF" yTitle="F(x)" xData={x} yData={z} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        }
+      });
+
+      var Exponential = React.createClass({
+        getInitialState: function() {
+          return {n: 10, rate: .5};
+        },
+        handleSubmit: function(e) {
+          e.preventDefault();
+          var n = parseFloat(this.refs.n.getDOMNode().value.trim());
+          var rate = parseFloat(this.refs.rate.getDOMNode().value.trim());
+          var variables = {n: n, rate: rate};
+          this.setState(variables);
+        },
+        render: function() {
+          var n = this.state.n;
+          var rate = this.state.rate;
+
+          var x = [];
+          var y = [];
+          var z = [];
+          var i = 0;
+
+          while (i <= n) {
+            nice_i = Math.round(i*100)/100;
+            x.push(nice_i);
+            var pdf = jStat.exponential.pdf(i, rate);
+            y.push(pdf);
+            var cdf = jStat.exponential.cdf(i, rate);
+            z.push(cdf)
+            i = i + 0.01
+          }
+
+          return(
+          <div className="tab-pane" id="exponential">
+            <div className="row">
+              <div className="col-md-3">
+                <h3>Exponential Distribution</h3>
+                <form onSubmit={this.handleSubmit} >
+                  <div className="form-group">
+                    <label>End of Interval</label>
+                    <input className="form-control" type="text" placeholder="Interval End" ref="n" />
+                  </div>
+                  <div className="form-group">
+                    <label>Rate</label>
+                    <input className="form-control" type="text" placeholder="rate" ref="rate" />
+                  </div>
+                  <button className="btn btn-default" type="submit" value="Calculate">Calculate</button>
+                </form>
+              </div>
+              <div className="col-md-9">
+                <div className="row">
+                  <div className="col-md-6">
+                    <LineChart title="PDF" yTitle="f(x)" xData={x} yData={y} />
+                  </div>
+                  <div className="col-md-6">
+                    <LineChart title="CDF" yTitle="F(x)" xData={x} yData={z} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          );
+        }
+      });
+
+      var Normal = React.createClass({
+        getInitialState: function() {
+          return {n: 20, mean: 0, sd: 5};
+        },
+        handleSubmit: function(e) {
+          e.preventDefault();
+          var mean = parseFloat(this.refs.mean.getDOMNode().value.trim());
+          var sd = parseFloat(this.refs.sd.getDOMNode().value.trim());
+          var n = parseFloat((mean + (4 * sd)));
+
+          var variables = {n: n, mean: mean, sd: sd};
+          this.setState(variables);
+        },
+        render: function() {
+          var n = this.state.n;
+          var mean = this.state.mean;
+          var sd = this.state.sd;
+
+          var x = [];
+          var y = [];
+          var z = [];
+          var i = (mean-(4*sd));
+
+          while (i <= n) {
+            nice_i = Math.round(i*10)/10;
+            x.push(nice_i);
+            var pdf = jStat.normal.pdf(i, mean, sd);
+            y.push(pdf);
+            var cdf = jStat.normal.cdf(i, mean, sd);
+            z.push(cdf)
+            i = i + 0.1
+          }
+          return(
+            <div className="tab-pane" id="normal">
+              <div className="row">
+                <div className="col-md-3">
+                  <h3>Normal Distribution</h3>
+                  <form onSubmit={this.handleSubmit} >
+                    <div className="form-group">
+                      <label>Mean</label>
+                      <input className="form-control" type="text" placeholder="mean" ref="mean" />
+                    </div>
+                    <div className="form-group">
+                      <label>Standard Deviation</label>
+                      <input className="form-control" type="text" placeholder="sd" ref="sd" />
+                    </div>
+                    <button className="btn btn-default" type="submit" value="Calculate">Calculate</button>
+                  </form>
+                </div>
+                <div className="col-md-9">
+                  <div className="row">
+                    <div className="col-md-6">
+                      <LineChart title="PDF" yTitle="f(x)" xData={x} yData={y} />
+                    </div>
+                    <div className="col-md-6">
+                      <LineChart title="CDF" yTitle="F(x)" xData={x} yData={z} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        }
+      });
+
+      var Poisson = React.createClass({
+        getInitialState: function() {
+          return {n: 20, lambda: 10};
+        },
+        handleSubmit: function(e) {
+          e.preventDefault();
+          var n = this.refs.n.getDOMNode().value.trim();
+          var lambda = this.refs.lambda.getDOMNode().value.trim();
+          var variables = {n: n, lambda: lambda};
+          this.setState(variables);
+        },
+        render: function() {
+          var n = parseFloat(this.state.n)
+          var lambda = parseFloat(this.state.lambda)
+
+          var x = [];
+          var y = [];
+          var z = [];
+
+          for (var i = 0; i <= n; i++) {
+            x.push(i);
+            var pdf = jStat.poisson.pdf(i, lambda);
+            y.push(pdf);
+            var cdf = jStat.poisson.cdf(i, lambda);
+            z.push(cdf)
+          }
+          return(
+            <div className="tab-pane" id="poisson">
+              <div className="row">
+                <div className="col-md-3">
+                  <h3>Poisson Distribution</h3>
+                  <form onSubmit={this.handleSubmit} >
+                    <div className="form-group">
+                      <label>Number of Trials</label>
+                      <input className="form-control" type="text" placeholder="n" ref="n" />
+                    </div>
+                    <div className="form-group">
+                      <label>Lambda</label>
+                      <input className="form-control" type="text" placeholder="lambda" ref="lambda" />
+                    </div>
+                    <button className="btn btn-default" type="submit" value="Calculate">Calculate</button>
+                  </form>
+                </div>
+                <div className="col-md-9">
+                  <div className="row">
+                    <div className="col-md-6">
+                      <LineChart title="PDF" yTitle="f(x)" xData={x} yData={y} />
+                    </div>
+                    <div className="col-md-6">
+                      <LineChart title="CDF" yTitle="F(x)" xData={x} yData={z} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        }
+      });
+
+      var Binomial = React.createClass({
+        getInitialState: function() {
+          return {n: 10, p: 0.5};
+        },
+        handleSubmit: function(e) {
+          e.preventDefault();
+          var n = this.refs.n.getDOMNode().value.trim();
+          var p = this.refs.p.getDOMNode().value.trim();
+          var variables = {n: n, p: p};
+          this.setState(variables);
+        },
+        render: function() {
+          var n = parseFloat(this.state.n)
+          var p = parseFloat(this.state.p)
+
+          var x = [];
+          var y = [];
+          var z = [];
+
+          for (var i = 0; i <= n; i++) {
+            x.push(i);
+            var pdf = jStat.binomial.pdf(i, n, p);
+            y.push(pdf);
+            var cdf = jStat.binomial.cdf(i, n, p);
+            z.push(cdf)
+          }
+          return(
+            <div className="tab-pane active" id="binomial">
+              <div className="row">
+                <div className="col-md-3">
+                  <h3>Binomial Distribution</h3>
+                  <form onSubmit={this.handleSubmit} >
+                    <div className="form-group">
+                      <label>Number of Trials</label>
+                      <input className="form-control" type="text" placeholder="n" ref="n" />
+                    </div>
+                    <div className="form-group">
+                      <label>Probablity of event</label>
+                      <input className="form-control" type="text" placeholder="p" ref="p" />
+                    </div>
+                    <button className="btn btn-default" type="submit" value="Calculate">Calculate</button>
+                  </form>
+                </div>
+                <div className="col-md-9">
+                  <div className="row">
+                    <div className="col-md-6">
+                      <LineChart title="PDF" yTitle="f(x)" xData={x} yData={y} />
+                    </div>
+                    <div className="col-md-6">
+                      <LineChart title="CDF" yTitle="F(x)" xData={x} yData={z} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        }
+      });
+
+      var LineChart = React.createClass({
+        renderChart: function() {
+          var title = this.props.title;
+          var xAxisData = this.props.xData;
+          var yAxisData = this.props.yData;
+          var yAxisTitle = this.props.yTitle;
+          var node = this.refs.chartNode.getDOMNode();
+          $(function () {
+            $(node).highcharts({
+                chart: {
+                    type: 'line'
+                },
+                credits: {
+                  enabled: false
+                },
+                title: {
+                    text: title
+                },
+                xAxis: {
+                    categories: xAxisData
+                },
+                yAxis: {
+                    title: {
+                        text: yAxisTitle
+                    }
+                },
+                series: [
+                  {data: yAxisData}
+                ]
+            });
+          });
+        },
+        componentDidMount: function() {
+          this.renderChart();
+        },
+        componentDidUpdate: function() {
+          this.renderChart();
+        },
+        render: function() {
+          var divStyle = {
+            width: '100%',
+            height: '400px'
+          };
+          return(
+            <div ref="chartNode" style={divStyle}>
+            </div>
+          );
+        }
+      });
+
+      React.render(
+        <App />,
+        document.getElementById('content')
+      );
+    </script>
+  </body>
+</html>
+
