@@ -82,10 +82,10 @@
               <div className="col-md-9">
                 <div className="row">
                   <div className="col-md-6">
-                    <LineChart title="PDF" xData={x} yData={y} />
+                    <LineChart title="PDF" yTitle="f(x)" xData={x} yData={y} />
                   </div>
                   <div className="col-md-6">
-                    <LineChart title="CDF" xData={x} yData={z} />
+                    <LineChart title="CDF" yTitle="F(x)" xData={x} yData={z} />
                   </div>
                 </div>
               </div>
@@ -139,10 +139,10 @@
               <div className="col-md-9">
                 <div className="row">
                   <div className="col-md-6">
-                    <LineChart title="PDF" xData={x} yData={y} />
+                    <LineChart title="PDF" yTitle="f(x)" xData={x} yData={y} />
                   </div>
                   <div className="col-md-6">
-                    <LineChart title="CDF" xData={x} yData={z} />
+                    <LineChart title="CDF" yTitle="F(x)" xData={x} yData={z} />
                   </div>
                 </div>
               </div>
@@ -202,10 +202,10 @@
               <div className="col-md-9">
                 <div className="row">
                   <div className="col-md-6">
-                    <LineChart title="PDF" xData={x} yData={y} />
+                    <LineChart title="PDF" yTitle="f(x)" xData={x} yData={y} />
                   </div>
                   <div className="col-md-6">
-                    <LineChart title="CDF" xData={x} yData={z} />
+                    <LineChart title="CDF" yTitle="F(x)" xData={x} yData={z} />
                   </div>
                 </div>
               </div>
@@ -259,10 +259,10 @@
               <div className="col-md-9">
                 <div className="row">
                   <div className="col-md-6">
-                    <LineChart title="PDF" xData={x} yData={y} />
+                    <LineChart title="PDF" yTitle="f(x)" xData={x} yData={y} />
                   </div>
                   <div className="col-md-6">
-                    <LineChart title="CDF" xData={x} yData={z} />
+                    <LineChart title="CDF" yTitle="F(x)" xData={x} yData={z} />
                   </div>
                 </div>
               </div>
@@ -316,10 +316,10 @@
               <div className="col-md-9">
                 <div className="row">
                   <div className="col-md-6">
-                    <LineChart title="PDF" xData={x} yData={y} />
+                    <LineChart title="PDF" yTitle="f(x)" xData={x} yData={y} />
                   </div>
                   <div className="col-md-6">
-                    <LineChart title="CDF" xData={x} yData={z} />
+                    <LineChart title="CDF" yTitle="F(x)" xData={x} yData={z} />
                   </div>
                 </div>
               </div>
@@ -333,6 +333,7 @@
           var title = this.props.title;
           var xAxisData = this.props.xData;
           var yAxisData = [{data: this.props.yData}];
+          var yAxisTitle = this.props.yTitle;
           var node = this.refs.chartNode.getDOMNode();
           $(function () {
             $(node).highcharts({
@@ -347,7 +348,7 @@
                 },
                 yAxis: {
                     title: {
-                        text: "f(x)"
+                        text: yAxisTitle
                     }
                 },
                 series: yAxisData
