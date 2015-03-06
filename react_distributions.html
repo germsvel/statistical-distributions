@@ -21,11 +21,13 @@
         render: function() {
           return (
             <div className="container">
+              <h2 className='text-center'>Discrete Distributions</h2>
               <Binomial />
               <Poisson />
+              <Uniform />
+              <h2 className='text-center'>Continuous Distributions</h2>
               <Normal />
               <Exponential />
-              <Uniform />
             </div>
           );
         }
@@ -343,6 +345,9 @@
             $(node).highcharts({
                 chart: {
                     type: 'line'
+                },
+                credits: {
+                  enabled: false
                 },
                 title: {
                     text: title
