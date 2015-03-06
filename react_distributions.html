@@ -153,41 +153,41 @@
 
       var Normal = React.createClass({
         getInitialState: function() {
-          return {n: 20, mean: 10, sd: 3};
+          return {n: 20, mean: 0, sd: 5};
         },
         handleSubmit: function(e) {
           e.preventDefault();
-          var n = this.refs.n.getDOMNode().value.trim();
-          var mean = this.refs.mean.getDOMNode().value.trim();
-          var sd = this.refs.sd.getDOMNode().value.trim();
+          var mean = parseFloat(this.refs.mean.getDOMNode().value.trim());
+          var sd = parseFloat(this.refs.sd.getDOMNode().value.trim());
+          var n = parseFloat((mean + (4 * sd)));
+
           var variables = {n: n, mean: mean, sd: sd};
           this.setState(variables);
         },
         render: function() {
-          var n = parseFloat(this.state.n)
-          var mean = parseFloat(this.state.mean)
-          var sd = parseFloat(this.state.sd)
+          var n = this.state.n;
+          var mean = this.state.mean;
+          var sd = this.state.sd;
 
           var x = [];
           var y = [];
           var z = [];
+          var i = (mean-(4*sd));
 
-          for (var i = 0; i <= n; i++) {
-            x.push(i);
+          while (i <= n) {
+            nice_i = Math.round(i*10)/10;
+            x.push(nice_i);
             var pdf = jStat.normal.pdf(i, mean, sd);
             y.push(pdf);
             var cdf = jStat.normal.cdf(i, mean, sd);
             z.push(cdf)
+            i = i + 0.1
           }
           return(
             <div className="row">
               <div className="col-md-3">
                 <h3>Normal Distribution</h3>
                 <form onSubmit={this.handleSubmit} >
-                  <div className="form-group">
-                    <label>Number of Trials</label>
-                    <input className="form-control" type="text" placeholder="n" ref="n" />
-                  </div>
                   <div className="form-group">
                     <label>Mean</label>
                     <input className="form-control" type="text" placeholder="mean" ref="mean" />
