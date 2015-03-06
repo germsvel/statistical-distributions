@@ -21,13 +21,22 @@
         render: function() {
           return (
             <div className="container">
-              <h2 className='text-center'>Discrete Distributions</h2>
-              <Binomial />
-              <Poisson />
-              <Uniform />
-              <h2 className='text-center'>Continuous Distributions</h2>
-              <Normal />
-              <Exponential />
+              <h2 className='text-center'>Distributions</h2>
+              <ul className="nav nav-tabs">
+                <li role="presentation" className="active"><a href="#binomial" data-toggle="tab">Binomial</a></li>
+                <li role="presentation"><a href="#poisson" data-toggle="tab">Poisson</a></li>
+                <li role="presentation"><a href="#uniform" data-toggle="tab">Uniform</a></li>
+                <li role="presentation"><a href="#normal" data-toggle="tab">Normal</a></li>
+                <li role="presentation"><a href="#exponential" data-toggle="tab">Exponential</a></li>
+              </ul>
+
+              <div className="tab-content">
+                <Binomial />
+                <Poisson />
+                <Uniform />
+                <Normal />
+                <Exponential />
+              </div>
             </div>
           );
         }
@@ -62,32 +71,34 @@
             z.push(cdf)
           }
           return(
-            <div className="row">
-              <div className="col-md-3">
-                <h3>Uniform Distribution</h3>
-                <form onSubmit={this.handleSubmit} >
-                  <div className="form-group">
-                    <label>Number of Trials</label>
-                    <input className="form-control" type="text" placeholder="n" ref="n" />
-                  </div>
-                  <div className="form-group">
-                    <label>From: a</label>
-                    <input className="form-control" type="text" placeholder="a" ref="a" />
-                  </div>
-                  <div className="form-group">
-                    <label>To: b</label>
-                    <input className="form-control" type="text" placeholder="b" ref="b" />
-                  </div>
-                  <button className="btn btn-default" type="submit" value="Calculate">Calculate</button>
-                </form>
-              </div>
-              <div className="col-md-9">
-                <div className="row">
-                  <div className="col-md-6">
-                    <LineChart title="PDF" yTitle="f(x)" xData={x} yData={y} />
-                  </div>
-                  <div className="col-md-6">
-                    <LineChart title="CDF" yTitle="F(x)" xData={x} yData={z} />
+            <div className="tab-pane" id="uniform">
+              <div className="row">
+                <div className="col-md-3">
+                  <h3>Uniform Distribution</h3>
+                  <form onSubmit={this.handleSubmit} >
+                    <div className="form-group">
+                      <label>Number of Trials</label>
+                      <input className="form-control" type="text" placeholder="n" ref="n" />
+                    </div>
+                    <div className="form-group">
+                      <label>From: a</label>
+                      <input className="form-control" type="text" placeholder="a" ref="a" />
+                    </div>
+                    <div className="form-group">
+                      <label>To: b</label>
+                      <input className="form-control" type="text" placeholder="b" ref="b" />
+                    </div>
+                    <button className="btn btn-default" type="submit" value="Calculate">Calculate</button>
+                  </form>
+                </div>
+                <div className="col-md-9">
+                  <div className="row">
+                    <div className="col-md-6">
+                      <LineChart title="PDF" yTitle="f(x)" xData={x} yData={y} />
+                    </div>
+                    <div className="col-md-6">
+                      <LineChart title="CDF" yTitle="F(x)" xData={x} yData={z} />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -127,6 +138,7 @@
           }
 
           return(
+          <div className="tab-pane" id="exponential">
             <div className="row">
               <div className="col-md-3">
                 <h3>Exponential Distribution</h3>
@@ -153,6 +165,7 @@
                 </div>
               </div>
             </div>
+          </div>
           );
         }
       });
@@ -190,28 +203,30 @@
             i = i + 0.1
           }
           return(
-            <div className="row">
-              <div className="col-md-3">
-                <h3>Normal Distribution</h3>
-                <form onSubmit={this.handleSubmit} >
-                  <div className="form-group">
-                    <label>Mean</label>
-                    <input className="form-control" type="text" placeholder="mean" ref="mean" />
-                  </div>
-                  <div className="form-group">
-                    <label>Standard Deviation</label>
-                    <input className="form-control" type="text" placeholder="sd" ref="sd" />
-                  </div>
-                  <button className="btn btn-default" type="submit" value="Calculate">Calculate</button>
-                </form>
-              </div>
-              <div className="col-md-9">
-                <div className="row">
-                  <div className="col-md-6">
-                    <LineChart title="PDF" yTitle="f(x)" xData={x} yData={y} />
-                  </div>
-                  <div className="col-md-6">
-                    <LineChart title="CDF" yTitle="F(x)" xData={x} yData={z} />
+            <div className="tab-pane" id="normal">
+              <div className="row">
+                <div className="col-md-3">
+                  <h3>Normal Distribution</h3>
+                  <form onSubmit={this.handleSubmit} >
+                    <div className="form-group">
+                      <label>Mean</label>
+                      <input className="form-control" type="text" placeholder="mean" ref="mean" />
+                    </div>
+                    <div className="form-group">
+                      <label>Standard Deviation</label>
+                      <input className="form-control" type="text" placeholder="sd" ref="sd" />
+                    </div>
+                    <button className="btn btn-default" type="submit" value="Calculate">Calculate</button>
+                  </form>
+                </div>
+                <div className="col-md-9">
+                  <div className="row">
+                    <div className="col-md-6">
+                      <LineChart title="PDF" yTitle="f(x)" xData={x} yData={y} />
+                    </div>
+                    <div className="col-md-6">
+                      <LineChart title="CDF" yTitle="F(x)" xData={x} yData={z} />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -247,28 +262,30 @@
             z.push(cdf)
           }
           return(
-            <div className="row">
-              <div className="col-md-3">
-                <h3>Poisson Distribution</h3>
-                <form onSubmit={this.handleSubmit} >
-                  <div className="form-group">
-                    <label>Number of Trials</label>
-                    <input className="form-control" type="text" placeholder="n" ref="n" />
-                  </div>
-                  <div className="form-group">
-                    <label>Lambda</label>
-                    <input className="form-control" type="text" placeholder="lambda" ref="lambda" />
-                  </div>
-                  <button className="btn btn-default" type="submit" value="Calculate">Calculate</button>
-                </form>
-              </div>
-              <div className="col-md-9">
-                <div className="row">
-                  <div className="col-md-6">
-                    <LineChart title="PDF" yTitle="f(x)" xData={x} yData={y} />
-                  </div>
-                  <div className="col-md-6">
-                    <LineChart title="CDF" yTitle="F(x)" xData={x} yData={z} />
+            <div className="tab-pane" id="poisson">
+              <div className="row">
+                <div className="col-md-3">
+                  <h3>Poisson Distribution</h3>
+                  <form onSubmit={this.handleSubmit} >
+                    <div className="form-group">
+                      <label>Number of Trials</label>
+                      <input className="form-control" type="text" placeholder="n" ref="n" />
+                    </div>
+                    <div className="form-group">
+                      <label>Lambda</label>
+                      <input className="form-control" type="text" placeholder="lambda" ref="lambda" />
+                    </div>
+                    <button className="btn btn-default" type="submit" value="Calculate">Calculate</button>
+                  </form>
+                </div>
+                <div className="col-md-9">
+                  <div className="row">
+                    <div className="col-md-6">
+                      <LineChart title="PDF" yTitle="f(x)" xData={x} yData={y} />
+                    </div>
+                    <div className="col-md-6">
+                      <LineChart title="CDF" yTitle="F(x)" xData={x} yData={z} />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -304,28 +321,30 @@
             z.push(cdf)
           }
           return(
-            <div className="row">
-              <div className="col-md-3">
-                <h3>Binomial Distribution</h3>
-                <form onSubmit={this.handleSubmit} >
-                  <div className="form-group">
-                    <label>Number of Trials</label>
-                    <input className="form-control" type="text" placeholder="n" ref="n" />
-                  </div>
-                  <div className="form-group">
-                    <label>Probablity of event</label>
-                    <input className="form-control" type="text" placeholder="p" ref="p" />
-                  </div>
-                  <button className="btn btn-default" type="submit" value="Calculate">Calculate</button>
-                </form>
-              </div>
-              <div className="col-md-9">
-                <div className="row">
-                  <div className="col-md-6">
-                    <LineChart title="PDF" yTitle="f(x)" xData={x} yData={y} />
-                  </div>
-                  <div className="col-md-6">
-                    <LineChart title="CDF" yTitle="F(x)" xData={x} yData={z} />
+            <div className="tab-pane active" id="binomial">
+              <div className="row">
+                <div className="col-md-3">
+                  <h3>Binomial Distribution</h3>
+                  <form onSubmit={this.handleSubmit} >
+                    <div className="form-group">
+                      <label>Number of Trials</label>
+                      <input className="form-control" type="text" placeholder="n" ref="n" />
+                    </div>
+                    <div className="form-group">
+                      <label>Probablity of event</label>
+                      <input className="form-control" type="text" placeholder="p" ref="p" />
+                    </div>
+                    <button className="btn btn-default" type="submit" value="Calculate">Calculate</button>
+                  </form>
+                </div>
+                <div className="col-md-9">
+                  <div className="row">
+                    <div className="col-md-6">
+                      <LineChart title="PDF" yTitle="f(x)" xData={x} yData={y} />
+                    </div>
+                    <div className="col-md-6">
+                      <LineChart title="CDF" yTitle="F(x)" xData={x} yData={z} />
+                    </div>
                   </div>
                 </div>
               </div>
